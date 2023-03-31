@@ -1,8 +1,19 @@
-#include <graph.h>
-
+#include "graph.h"
+/*
+// Empty Constructor
+template <typename K, typename D>
+Graph<K,D>::Graph(){
+  // Create Vertex objects for each key/data pair and add them to the vertices map
+    for (int i = 0; i < keys.size(); i++) {
+        Vertex<K, D>* vertex = new Vertex<K, D>(keys[i], data[i]);
+        vertices[keys[i]] = 0;
+    }
+}
+*/
 // Constructor
 template <typename K, typename D>
-Graph<K,D>::Graph(std::vector<K> keys, std::vector<D> data, std::vector<std::vector<K>> edges) {
+Graph<K, D>::Graph(const std::vector<K>& keys, const std::vector<D>& data, const std::vector<std::vector<K>>& edges)
+{
     // Create Vertex objects for each key/data pair and add them to the vertices map
     for (int i = 0; i < keys.size(); i++) {
         Vertex<K, D>* vertex = new Vertex<K, D>(keys[i], data[i]);
@@ -23,6 +34,53 @@ Graph<K,D>::Graph(std::vector<K> keys, std::vector<D> data, std::vector<std::vec
         }
     }
 }
+/*
+//constructor attempt 
+template<typename D, typename K> 
+Graph<D, K>::Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges)
+{
+    numVert = keys.size();
+
+    vertices =new Vertex<D, K> *[numVert];
+    for  (int i = 0; i <numVert; i++){
+        Vertex<D, K> *vertex = new Vertex<D, K>(data[i], keys[i]);
+        vertices[i] = vertex;
+    }
+    for (int i = 0; i < edges.size(); i++){
+        for(int j = 0; j < edges[i].size(); j++){
+            for(int k = 0; k< numVert; k++){
+                if(vertices[k]->key ==edges[i][j]){
+                    D tempD = vertices[k]-> data;
+                    K tempK = vertices[k]-> key;
+                    Vertex<D, K> *tempVertex = vertices[i];
+                    Vertex<D, K> *vertex = new Vertex<D, K>(tempD, tempK);
+                    while(tempVertex -> next != NULL){
+                        tempVertex = tempVertex->next;
+                    }
+                    tempVertex->next = vertex;
+                }
+            }
+        }
+    }
+}
+
+//Destructor
+template <typename D, typename K> 
+Graph<D, K>::~Graph()
+{
+    for(int i=0; i <numVert; i++)
+    {
+        Vertex<D,K>*t;
+        while(vertices[i]->next!=NULL)
+        {
+            t = vertices[i]->next;
+            delete vertices[i];
+            vertices[i]= t;
+        }
+    }
+    delete[] vertices;
+}
+*/
 
 
 //get method
@@ -37,7 +95,17 @@ Vertex<K,D>* Graph<K,D>::get(K key) {
         return nullptr; 
     }
 }
-
+//get... 2nd attempt? 
+template <typename K, typename D>
+Vertex<K,D>* Graph<K,D>::get(K k){
+    for (int i = 0; i <numVert; i++){
+        if(vertices[i]->key==k){
+            return vertices[i];
+        }
+        return nullptr;
+    }
+}
+/*
 //Reachable method
 template <typename K, typename D>
 bool Graph<K, D>::reachable(K u, K v) {
@@ -50,6 +118,7 @@ bool Graph<K, D>::reachable(K u, K v) {
     // Perform a depth-first search from the starting vertex
     return dfs(start, v);
 }
+
 
 
 
@@ -123,7 +192,7 @@ void Graph<K,D>::print_path(const K& start_key, const K& end_key) {
     std::cout << path[0] << std::endl;
 }
 
-
+/*
 
 /*  Precondition: The Graph object has been constructed and 
     contains at least two vertices with the given keys u and v.
@@ -131,7 +200,7 @@ void Graph<K,D>::print_path(const K& start_key, const K& end_key) {
     Postcondition: The edge classification of the edge from 
     vertex u to v has been determined and returned as a string.*/ 
 
-
+/*
 // Method to get the classification of the edge from vertex u to vertex v
 template<typename K, typename D>
 std::string Graph<K,D>::edge_class(K u, K v) {
@@ -205,3 +274,4 @@ void Graph<K, D>::bfs_tree(K s) {
 template class Graph<int, int>;
 template class Graph<std::string, std::string>;
 // Add more instantiations as needed
+*/
