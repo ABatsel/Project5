@@ -32,24 +32,24 @@ Vertex<D,K>*    Graph<D,K>::get(K k)
 template <class D, class K>
 bool        Graph<D,K>::reachable( K u, K v )
 {
-    if (vertices.count(u) == 0)
+    if (vertices.count(u) == 0 || vertices.count(v) == 0)
     {
         return false;
     }
 
     Vertex<D,K>& u_vertex = vertices.at(u);
-    if(count(u_vertex.adj_list.begin(), u_vertex.adj_list.end(), v) == 0)
+    if(count(u_vertex.adj_list.begin(), u_vertex.adj_list.end(), v) != 0)
     {
-        return false;
+        cout << v << " is reachable from " << u << endl;
+        return true;
     }
 
     Vertex<D,K>& v_vertex = vertices.at(v);
-     if(count(u_vertex.adj_list.begin(), u_vertex.adj_list.end(), v) == 0)
+     if(count(v_vertex.adj_list.begin(), v_vertex.adj_list.end(), u) != 0)
     {
-        return false;
+        cout << u << " is reachable from " << v << endl;
+        return true;
     }
-   
-    cout << v << " is reachable from " << u << endl;
-    return true;
+    return false;
 
 }
