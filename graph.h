@@ -35,14 +35,14 @@ class Graph
 {
 public:     
                 Graph();
-                Graph(vector<D> data, vector<K> key, vector<vector<K>> edges);
+                Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges);
                 ~Graph();
 Vertex<D,K>*    get(K key);
-bool            reachable(const K& u, const K& v) const;
-void            print_path(const K& start_key, const K& end_key);
-std::string     edge_class(K u, K v);
-void            bfs_tree(K s);
-void            bfs(K start_key);
+bool            reachable( K u, K v );
+void            print_path( K start_key, K end_key );
+std::string     edge_class( K u, K v );
+void            bfs_tree( K s );
+void            bfs( K start_key );
 
 private:
 unordered_map<K, Vertex<D,K>> vertices; //key -> vertex
