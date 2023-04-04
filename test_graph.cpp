@@ -50,7 +50,7 @@ void test_get(Graph<string,string>* G) {
         cerr << "Error getting vertex from graph : " << e.what() << endl;
     }
 }
-
+/*
 void test_reachable(Graph<string,string>* G) {
     try {
         if(!G->reachable("R", "V")) {
@@ -138,20 +138,27 @@ void test_bfs_tree(Graph<string,string>* G) {
     }
     
 }
+*/
+
 
 int main() {
 
     Graph<string,string>* G = generate_graph("graph_description.txt");
-    test_get(G);
-    test_reachable(G);
-    test_bfs(G);
-    test_print_path(G);
-    test_edge_class(G);
-    test_bfs_tree(G);
+
+    for(auto it = unorderedMap.begin();
+         it != unorderedMap.end(); it++) {
+        cout << it->first << ':' << it->second << " ";
+        }
+    //test_get(G);
+    // test_reachable(G);
+    // test_bfs(G);
+    // test_print_path(G);
+    // test_edge_class(G);
+    // test_bfs_tree(G);
 
     cout << "Testing completed" << endl;
 
-    delete G;
+    //delete G;
 
     return 0;
 }
