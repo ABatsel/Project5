@@ -18,12 +18,19 @@ public:
     D               data; 
     bool            color;
     int             distance;
-    vector<K>       adj_list;
+    vector<K>*      adj_list;
     Vertex<D,K>*    parent;
 
     Vertex<D,K>(D d, K k){
         data = d; 
         key = k; 
+        color = false; 
+        distance = 0; 
+        this->parent = nullptr;}
+
+    Vertex<D,K>(){
+        data = D(); 
+        key = K(); 
         color = false; 
         distance = 0; 
         this->parent = nullptr;}
@@ -38,14 +45,14 @@ public:
                 Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges);
                 ~Graph();
 Vertex<D,K>*    get(K key);
-bool            reachable( K u, K v );
+bool            reachable( const K u, const K v ) const;
+void            bfs( K start_key ) const;
 void            print_path( K start_key, K end_key );
 std::string     edge_class( K u, K v );
 void            bfs_tree( K s );
-void            bfs( K start_key );
 
 private:
-unordered_map<K, Vertex<D,K>> vertices; //key -> vertex
+unordered_map<K, Vertex<D,K>*> vertices; //key -> vertex
 };
 
 #endif
