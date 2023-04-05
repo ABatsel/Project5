@@ -21,6 +21,11 @@ template <class D, class K>
 template <class D, class K>
         Graph<D,K>::Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges)
 {
+    // Check that keys, data, and edges have the same size //try to help with seg fault 
+    if (keys.size() != data.size() || keys.size() != edges.size()) {
+        throw invalid_argument("Keys, data, and edges vectors must have the same size");
+    }
+
     // Add vertices to the graph
     for (int i = 0; i < keys.size(); i++) {
         Vertex<D,K>* v = new Vertex<D,K>(data[i], keys[i]);
@@ -28,6 +33,16 @@ template <class D, class K>
         vertices.insert(make_pair(keys[i], v));
     }
 
+    for (const auto& pair : vertices) {
+        cout << "Key: " << pair.first << endl;
+        cout << "Data: " << pair.second->data << endl;
+        cout << "Adjacency list: ";
+        for (const auto& adj_key : *(pair.second->adj_list)) {
+            cout << adj_key << " ";
+        }
+        cout << endl << endl;
+    }
+    
     for (auto& pair : vertices) {
         K key = pair.first;
         Vertex<D,K>* v = pair.second;
@@ -36,9 +51,12 @@ template <class D, class K>
             adj_v->parent = v;
         }
     }
+
+
 }
 
-template <class D, class K>
+//get
+template <class D, class K> //this is seg faulting
 Vertex<D,K>*    Graph<D,K>::get(K k) 
 {
     if (vertices.count(k) <= 0)
