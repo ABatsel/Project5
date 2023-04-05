@@ -21,11 +21,6 @@ template <class D, class K>
 template <class D, class K>
         Graph<D,K>::Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges)
 {
-    // Check that keys, data, and edges have the same size //try to help with seg fault 
-    if (keys.size() != data.size() || keys.size() != edges.size()) {
-        throw invalid_argument("Keys, data, and edges vectors must have the same size");
-    }
-
     // Add vertices to the graph
     for (int i = 0; i < keys.size(); i++) {
         Vertex<D,K>* v = new Vertex<D,K>(data[i], keys[i]);
@@ -33,16 +28,6 @@ template <class D, class K>
         vertices.insert(make_pair(keys[i], v));
     }
 
-    for (const auto& pair : vertices) {
-        cout << "Key: " << pair.first << endl;
-        cout << "Data: " << pair.second->data << endl;
-        cout << "Adjacency list: ";
-        for (const auto& adj_key : *(pair.second->adj_list)) {
-            cout << adj_key << " ";
-        }
-        cout << endl << endl;
-    }
-    
     for (auto& pair : vertices) {
         K key = pair.first;
         Vertex<D,K>* v = pair.second;
@@ -51,12 +36,9 @@ template <class D, class K>
             adj_v->parent = v;
         }
     }
-
-
 }
 
-//get
-template <class D, class K> //this is seg faulting
+template <class D, class K>
 Vertex<D,K>*    Graph<D,K>::get(K k) 
 {
     if (vertices.count(k) <= 0)
@@ -72,27 +54,50 @@ bool        Graph<D,K>::reachable( const K u, const K v ) const
     if (vertices.count(u) == 0 || vertices.count(v) == 0)
     {
         return false;
-    }
+    };
 
-    Vertex<D,K>* u_vertex = vertices.at(u);
-    if(count(u_vertex->adj_list->begin(), u_vertex->adj_list->end(), v) != 0)
+    Vertex<D,K>* u_vertex = vertices.at(u);   
+    for(int i = 0; i < u_vertex->adj_list->size(); i++)
     {
-        cout << v << " is reachable from " << u << endl;
-        return true;
+        if (u_vertex->adj_list->at(i) == v)
+        {
+            cout << v << " is reachable from " << u << endl;
+            return true;
+        }
     }
-
-    Vertex<D,K>* v_vertex = vertices.at(v);
-     if(count(v_vertex->adj_list->begin(), v_vertex->adj_list->end(), u) != 0)
+    
+    Vertex<D,K>* v_vertex = vertices.at(v); 
+    for(int i = 0; i < v_vertex->adj_list->size(); i++)
     {
-        cout << u << " is reachable from " << v << endl;
-        return true;
+        if (v_vertex->adj_list->at(i) == u)
+        {
+            cout << u << " is reachable from " << v << endl;
+            return true;
+        }
     }
     return false;
-
 }
 
 template <class D, class K>
 void    Graph<D,K>::bfs( K start_key ) const
 {
-    
+    Vertex<D,K>* start_vertex = vertices.begin();
+    queue<Vertex<D,K>*> q;
+    q.push(start_vertex);
+    while ( !q.empty() )
+    {
+        Vertex<D,K>* u = q.front();
+        for( int i = 0; i < u->adj_list->size(); i++ )
+        {
+            Vertex<D,K>* temp_vertex = vertices.at(i);
+            if(temp_vertex->color == false)
+            {
+                temp_vertex->color = true;
+                temp_vertex->distance += 1;
+                temp_vertex->parent = u;
+                q.push(temp_vertex);
+            }
+        }
+        u->color = true;
+    }
 }
