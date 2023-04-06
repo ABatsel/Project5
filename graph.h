@@ -17,22 +17,22 @@ public:
     K               key;
     D               data; 
     bool            color;
-    int             distance;
+    double          distance; 
     vector<K>*      adj_list;
     Vertex<D,K>*    parent;
 
     Vertex<D,K>(D d, K k){
         data = d; 
         key = k; 
-        color = false; 
-        distance = 0; 
+        color = false; //undiscovered
+        distance = numeric_limits<double>::infinity();
         this->parent = nullptr;}
 
     Vertex<D,K>(){
         data = D(); 
         key = K(); 
         color = false; 
-        distance = 0; 
+        distance = numeric_limits<double>::infinity();
         this->parent = nullptr;}
 private:
 };
