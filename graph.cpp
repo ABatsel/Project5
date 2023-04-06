@@ -160,7 +160,8 @@ string Graph<D,K>::edge_class(K u, K v)
     dfs();
     Vertex<D,K>* u_vertex = vertices.at(u);
     Vertex<D,K>* v_vertex = vertices.at(v);
-
+    cout << "u: " << u_vertex->key << "/" << u_vertex->discovery_time << "/" << u_vertex->end_time << "/" << u_vertex->parent->key<< endl;
+    cout << "v: " << v_vertex->key << "/" << v_vertex->discovery_time << "/" << v_vertex->end_time << "/" << u_vertex->parent->key<< endl;   
     if ((v_vertex->discovery_time > u_vertex->discovery_time) && (v_vertex->end_time < u_vertex->end_time)) {
         return "tree edge";
     } 
@@ -195,9 +196,13 @@ void    Graph<D,K>::bfs_tree(K start_key)
             cout << "\n";
             level++;
         }
-        if ( !q.empty() && u->distance > (q.front())->distance )
+        if ( (!q.empty() && (q.front())->distance > u->distance) || (u->key == start_key) )
         {
             cout << u->key;
+        }
+        else if ( q.empty() )
+        {
+           cout << u->key; 
         }
         else
         {
