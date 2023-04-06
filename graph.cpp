@@ -28,15 +28,8 @@ template <class D, class K>
         vertices.insert(make_pair(keys[i], v));
     }
 
-    for (auto& pair : vertices) {
-        K key = pair.first;
-        Vertex<D,K>* v = pair.second;
-        for (K adj_key : *(v->adj_list)) {
-            Vertex<D,K>* adj_v = vertices[adj_key];
-            adj_v->parent = v;
-        }
-    }
 }
+
 
 template <class D, class K>
 Vertex<D,K>*    Graph<D,K>::get(K k) 
@@ -78,26 +71,112 @@ bool        Graph<D,K>::reachable( const K u, const K v ) const
     return false;
 }
 
+
 template <class D, class K>
 void    Graph<D,K>::bfs( K start_key ) const
-{
-    Vertex<D,K>* start_vertex = vertices.begin();
+{ 
+    Vertex<D,K>* start_vertex = vertices.at(start_key);
     queue<Vertex<D,K>*> q;
-    q.push(start_vertex);
+    start_vertex-> color = true; //discovered = true
+    start_vertex-> distance = 0;
+    start_vertex-> parent = nullptr; 
+    q.push(start_vertex); //enqueue
     while ( !q.empty() )
     {
+
         Vertex<D,K>* u = q.front();
+        q.pop();
         for( int i = 0; i < u->adj_list->size(); i++ )
         {
-            Vertex<D,K>* temp_vertex = vertices.at(i);
-            if(temp_vertex->color == false)
+            Vertex<D,K>* temp_vertex = vertices.at(u->adj_list->at(i));
+            if(temp_vertex->color == false) //not discovered
             {
-                temp_vertex->color = true;
-                temp_vertex->distance += 1;
-                temp_vertex->parent = u;
+                temp_vertex->color = true; //true = gray = discovered
+                temp_vertex->distance = u->distance + 1; // distance = distance + 1
+                temp_vertex->parent = u; //pi = u
                 q.push(temp_vertex);
             }
         }
-        u->color = true;
+        u->color = true; //discovered
     }
 }
+
+
+
+
+template <class D, class K>
+void Graph<D,K>::dfs(K start_key) const {
+    Vertex<D,K>* start_vertex = vertices.at(start_key);
+    dfs_visit(start_vertex);
+}
+
+template <class D, class K>
+void Graph<D,K>::dfs_visit(Vertex<D,K>* u) const {
+    u->color = true; // discovered
+    cout << u->key << endl;
+    for (int i = 0; i < u->adj_list->size(); i++) {
+        Vertex<D,K>* v = vertices.at(u->adj_list->at(i));
+        if (v->color == false) { // not discovered
+            v->parent = u;
+            dfs_visit(v);
+        }
+    }
+}
+
+
+template <class D, class K>
+void Graph<D,K>::print_path(K s, K v) {
+    if (v == s) {
+        cout << s;
+    } else if (vertices.at(v)->parent == nullptr) {
+        cout << "no path from " << s << " to " << v << " exists." << endl;
+    } else {
+        print_path(s, vertices.at(v)->parent->key);
+        cout << " -> " << v;
+    }
+}
+
+
+
+template <class D, class K>
+void    Graph<D,K>::bfs_tree( K start_key )
+{ 
+    Vertex<D,K>* start_vertex = vertices.at(start_key);
+    queue<Vertex<D,K>*> q;
+    start_vertex-> color = true; //discovered = true
+    start_vertex-> distance = 0;
+    start_vertex-> parent = nullptr; 
+    q.push(start_vertex); //enqueue
+    cout << start_key << endl; // print starting key
+    cout << "1" << endl;
+    while ( !q.empty() )
+    {
+        cout << "2" << endl;
+
+        Vertex<D,K>* u = q.front();
+        q.pop();
+        for( int i = 0; i < u->adj_list->size(); i++ )
+        {
+            cout << "3" << endl;
+            Vertex<D,K>* temp_vertex = vertices.at(u->adj_list->at(i));
+            //Vertex<D,K>* temp_vertex = vertices.at(i);
+            cout << temp_vertex->color << "HHHHHHHH" << endl; 
+            //if(temp_vertex->color == false) //not discovered //never enters for loop
+            if ( !(vertices.at(u->adj_list->at(i))) )
+            {
+                cout << "4" << endl;
+
+                temp_vertex->color = true; //true = gray = discovered
+                temp_vertex->distance = u->distance + 1; // distance = distance + 1
+                temp_vertex->parent = u; //pi = u
+                //cout << u->adj_list->at(i)->key; //want to print the key, why does u->adj_list not work
+                cout << temp_vertex->key;
+                q.push(temp_vertex);
+            }
+        }
+        u->color = true; //discovered
+        if ( !q.empty() && q.front()->distance == (u->distance)+1)        
+            cout << endl;     //start a new row 
+    }
+}
+

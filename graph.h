@@ -18,6 +18,8 @@ public:
     D               data; 
     bool            color;
     double          distance; 
+    int             start_time;
+    int             end_time; 
     vector<K>*      adj_list;
     Vertex<D,K>*    parent;
 
@@ -26,6 +28,8 @@ public:
         key = k; 
         color = false; //undiscovered
         distance = numeric_limits<double>::infinity();
+        start_time = 0; 
+        end_time = 0; 
         this->parent = nullptr;}
 
     Vertex<D,K>(){
@@ -33,6 +37,8 @@ public:
         key = K(); 
         color = false; 
         distance = numeric_limits<double>::infinity();
+        start_time = 0; 
+        end_time = 0; 
         this->parent = nullptr;}
 private:
 };
@@ -47,8 +53,10 @@ public:
 Vertex<D,K>*    get(K key);
 bool            reachable( const K u, const K v ) const;
 void            bfs( K start_key ) const;
-void            print_path( K start_key, K end_key );
-std::string     edge_class( K u, K v );
+void            dfs( K start_key ) const; //not void 
+void            dfs_visit(Vertex<D,K>* u) const;
+void            print_path( K start_key, K end_key ); //not void
+std::string     edge_class( K u, K v ); //need dfs 
 void            bfs_tree( K s );
 
 private:
