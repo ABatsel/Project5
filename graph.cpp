@@ -85,7 +85,6 @@ void    Graph<D,K>::bfs( K start_key ) const{
     q.push(start_vertex); //enqueue
     while ( !q.empty() )
     {
-
         Vertex<D,K>* u = q.front();
         q.pop();
         for( int i = 0; i < u->adj_list->size(); i++ )
@@ -112,7 +111,6 @@ void Graph<D,K>::dfs() {
     {
         Vertex<D,K>* define_vertex = it->second;
         define_vertex->color = false;
-        define_vertex->distance = numeric_limits<double>::infinity();
         define_vertex->parent = nullptr;
     }
     time = 0;
@@ -129,7 +127,7 @@ void Graph<D,K>::dfs() {
 template <class D, class K>
 void Graph<D,K>::dfs_visit(Vertex<D,K>* u) {
     time = time + 1;
-    u->distance = time;
+    u->discovery_time = time;
     u->color = true; // discovered
     for (int i = 0; i < u->adj_list->size(); i++) {
         Vertex<D,K>* v = vertices.at(u->adj_list->at(i));
@@ -140,6 +138,7 @@ void Graph<D,K>::dfs_visit(Vertex<D,K>* u) {
     }
     time = time + 1;
     u->end_time = time;
+    u->color == true;
 }
 
 
@@ -156,39 +155,65 @@ void Graph<D,K>::print_path(K s, K v) {
 }
 
 template <class D, class K>
-void Graph<D,K>::edge_class(K s, K v)
+string Graph<D,K>::edge_class(K u, K v)
+{
+    dfs();
+    Vertex<D,K>* u_vertex = vertices.at(u);
+    Vertex<D,K>* v_vertex = vertices.at(v);
+
+    if ((v_vertex->discovery_time > u_vertex->discovery_time) && (v_vertex->end_time < u_vertex->end_time)) {
+        return "tree edge";
+    } 
+    else if ((u_vertex->discovery_time < v_vertex->discovery_time)&& (u_vertex->end_time < v_vertex->end_time)) {
+        return "back edge";
+        } 
+    else if ((u_vertex->discovery_time > v_vertex->discovery_time)&& (u_vertex->end_time > v_vertex->end_time)) {
+        return "forward edge";
+    } 
+    else if (v_vertex->discovery_time - u_vertex->discovery_time == 1){
+        return "cross edge";
+    } 
+    else {
+        return "no edge";
+    }
+}
 
 template<class D, class K>
-void    Graph<D,K>::bfs_tree( K start_key )
+void    Graph<D,K>::bfs_tree(K start_key)
 {
     bfs(start_key);
+    
     Vertex<D,K>* start_vertex = vertices.at(start_key);
     queue<Vertex<D,K>*> q;
-    start_vertex-> color = true; //discovered = true
-    start_vertex-> distance = 0;
-    start_vertex-> parent = nullptr; 
-    q.push(start_vertex); //enqueue
-    int curr_level = 0;
-    while ( !q.empty() )
-    {
+    q.push(start_vertex);
+    int level = 0;
+    
+    while (!q.empty()) {
         Vertex<D,K>* u = q.front();
         q.pop();
-        if (u->distance > curr_level) {
-            cout << endl;
-            curr_level = u->distance;
+        if ( u->distance > level) {
+            cout << "\n";
+            level++;
         }
-        cout << u->key << " ";
-        for( int i = 0; i < u->adj_list->size(); i++ )
+        if ( !q.empty() && u->distance > (q.front())->distance )
         {
-            Vertex<D,K>* temp_vertex = vertices.at(u->adj_list->at(i));
-            if(temp_vertex->color == false) //not discovered
-            {
-                temp_vertex->color = true; //true = gray = discovered
-                temp_vertex->distance = u->distance + 1; // distance = distance + 1
-                temp_vertex->parent = u; //pi = u
-                q.push(temp_vertex);
+            cout << u->key;
+        }
+        else
+        {
+            cout << u->key << " ";
+        }
+
+        for (int i = 0; i < u->adj_list->size(); i++) {
+            Vertex<D,K>* v = vertices.at(u->adj_list->at(i));
+            if (v->parent == u) {
+                q.push(v);
             }
         }
-        u->color = true; //discovered
     }
+    if (!q.empty())
+    {
+        cout << "\n";
+    }
+    
 }

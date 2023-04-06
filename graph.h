@@ -18,7 +18,7 @@ public:
     D               data; 
     bool            color;
     double          distance; 
-    int             start_time;
+    int             discovery_time; 
     int             end_time; 
     vector<K>*      adj_list;
     Vertex<D,K>*    parent;
@@ -28,7 +28,7 @@ public:
         key = k; 
         color = false; //undiscovered
         distance = numeric_limits<double>::infinity();
-        start_time = 0; 
+        discovery_time = 0; 
         end_time = 0; 
         this->parent = nullptr;}
 
@@ -37,7 +37,7 @@ public:
         key = K(); 
         color = false; 
         distance = numeric_limits<double>::infinity();
-        start_time = 0; 
+        discovery_time = 0; 
         end_time = 0; 
         this->parent = nullptr;}
 private:
@@ -56,7 +56,7 @@ void            bfs( K start_key ) const;
 void            dfs() ; //not void 
 void            dfs_visit(Vertex<D,K>* u);
 void            print_path( K start_key, K end_key ); //not void
-std::string     edge_class( K u, K v ); //need dfs 
+string          edge_class( K u, K v ); //need dfs 
 void            bfs_tree( K s );
 
 private:
