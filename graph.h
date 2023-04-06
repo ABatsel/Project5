@@ -53,14 +53,15 @@ public:
 Vertex<D,K>*    get(K key);
 bool            reachable( const K u, const K v ) const;
 void            bfs( K start_key ) const;
-void            dfs( K start_key ) const; //not void 
-void            dfs_visit(Vertex<D,K>* u) const;
+void            dfs() ; //not void 
+void            dfs_visit(Vertex<D,K>* u);
 void            print_path( K start_key, K end_key ); //not void
 std::string     edge_class( K u, K v ); //need dfs 
 void            bfs_tree( K s );
 
 private:
 unordered_map<K, Vertex<D,K>*> vertices; //key -> vertex
+int     time;
 };
 
 #endif
