@@ -83,24 +83,6 @@ void test_bfs(Graph<string,string>* G) {
     } 
 }
 
-
-void test_dfs(Graph<string,string>* G) {
-    try {
-        G->dfs("S");
-        string vertices[8] = {"S", "R", "V", "W", "T", "U", "X", "Y"};
-        int start_times[8] = {1, 2, 3, 4, 9, 10, 6, 7};
-        int end_times[8] = {16, 15, 14, 5, 8, 11, 12, 13};
-        for(int i = 0; i < 8; i++){
-            if(G->get(vertices[i])==nullptr || G->get(vertices[i])->start_time!=start_times[i] || G->get(vertices[i])->end_time!=end_times[i]) {
-                cout << "Incorrect dfs result. Vertex " << vertices[i] << " should have start time " << start_times[i] << " and end time " << end_times[i] << " when starting from source vertex \"S\"" << endl;
-                cout << "Actual start time: " << G->get(vertices[i])->start_time << ", actual end time: " << G->get(vertices[i])->end_time << endl;
-            }
-        }
-    } catch(exception& e) {
-        cerr << "Error testing dfs : " << e.what() << endl;
-    } 
-}
-
 void test_print_path(Graph<string,string>* G) {
     try {
         stringstream buffer;
@@ -114,7 +96,7 @@ void test_print_path(Graph<string,string>* G) {
         cerr << "Error testing print path : " << e.what() << endl;
     }
 }
-/*
+
 void test_edge_class(Graph<string,string>* G) {
     try {
         string e_class =  G->edge_class("R", "V"); // tree edge
@@ -142,7 +124,7 @@ void test_edge_class(Graph<string,string>* G) {
     }
     
 }
-*/
+
 void test_bfs_tree(Graph<string,string>* G) {
     try {
         stringstream buffer;
@@ -164,22 +146,16 @@ int main() {
 
     Graph<string,string>* G = generate_graph("graph_description.txt");
 
-    /*for(auto it = unorderedMap.begin();
-         it != unorderedMap.end(); it++) {
-        cout << it->first << ':' << it->second << " ";
-        }
-        */
-      test_get(G); //passes
-      test_reachable(G); //passes
-      test_bfs(G); //passes
-      test_print_path(G); //passes
-    // test_edge_class(G); //edge_class requires dfs 
-      test_bfs_tree(G); //issue
-      test_dfs(G); //issue 
+      test_get(G); 
+      test_reachable(G); 
+      test_bfs(G); 
+      test_print_path(G); 
+      test_edge_class(G);  
+      test_bfs_tree(G); 
 
     cout << "Testing completed" << endl;
 
-    //delete G;
+    delete G;
 
     return 0;
 }

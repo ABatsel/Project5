@@ -7,7 +7,8 @@
 #include <climits>
 #include <string>
 #include <list>
-
+#include <map>
+#include <unordered_set>
 using namespace std;
 
 template<class D, class K>
@@ -60,7 +61,8 @@ string          edge_class( K u, K v ); //need dfs
 void            bfs_tree( K s );
 
 private:
-unordered_map<K, Vertex<D,K>*> vertices; //key -> vertex
+//unordered_map<K, Vertex<D,K>*> vertices; //key -> vertex
+map<K, Vertex<D,K>*> vertices;
 int     time;
 };
 

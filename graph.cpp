@@ -7,28 +7,25 @@
 //==================================================
 
 #include "graph.h"
-
 //===================================================================================
 // Empty Constructor for element of datatype K and D
-// Pre-condition: Initialize the unordered_map vertices and time.
-// Post-condition: The time variable is initialized to 0, and the vertices method 
-// of the Graph class is called, which initializes the data structures that will 
-// store the graph's vertices.
+// Pre-condition: Initialize the unordered_map vertices.
+// Post-condition: The vertices method of the Graph class is called, which initializes
+// the data structures that will store the graph's vertices.
 // Params: none
 //===================================================================================
 template <class D, class K>
-        Graph<D,K>::Graph(){
+Graph<D,K>::Graph(){
     time = 0;
     vertices();
 }
 
 // Destructor
 template <class D, class K>
-        Graph<D,K>::~Graph(){
+Graph<D,K>::~Graph(){
     time = 0;
     for (auto& pair : vertices) {
         Vertex<D,K>* v = pair.second;
-        delete v->adj_list;
         delete v;
     }
 }
@@ -55,7 +52,7 @@ template <class D, class K>
 }
 
 //===================================================================================
-//  get vector<D,K> we store in the unordered_map vertices
+// get vector<D,K> we store in the unordered_map vertices
 // Pre-condition: The Graph object has been initialized and contains vertices, amd a
 // valid key k of type K is passed as input to the function.
 // Post-condition: 
@@ -136,8 +133,6 @@ void    Graph<D,K>::bfs( K start_key ) const{
 }
 
 
-
-
 template <class D, class K>
 void Graph<D,K>::dfs() {
     for(auto it = vertices.begin(); it != vertices.end();it++)
@@ -156,6 +151,7 @@ void Graph<D,K>::dfs() {
         }
     }
 }
+
 
 template <class D, class K>
 void Graph<D,K>::dfs_visit(Vertex<D,K>* u) {
@@ -195,7 +191,6 @@ string Graph<D,K>::edge_class(K u, K v)
     {
         return result;
     } 
-    
     dfs();
     Vertex<D,K>* u_vertex = vertices.at(u);
     Vertex<D,K>* v_vertex = vertices.at(v);
