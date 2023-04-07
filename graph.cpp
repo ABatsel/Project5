@@ -1,6 +1,21 @@
+//==================================================
+// graph.cpp
+// graph projecty
+//
+// Created by Ava Batsel, Rachel Zeng, 
+//
+//==================================================
+
 #include "graph.h"
 
-// Empty Constructor
+//===================================================================================
+// Empty Constructor for element of datatype K and D
+// Pre-condition: Initialize the unordered_map vertices and time.
+// Post-condition: The time variable is initialized to 0, and the vertices method 
+// of the Graph class is called, which initializes the data structures that will 
+// store the graph's vertices.
+// Params: none
+//===================================================================================
 template <class D, class K>
         Graph<D,K>::Graph(){
     time = 0;
@@ -17,7 +32,18 @@ template <class D, class K>
         delete v;
     }
 }
-// Constructor
+
+//===================================================================================
+// Constructor for element of datatype K and D
+// Pre-condition: provided three input vectors keys, data, and edges.
+// Post-condition: The vertices of the graph are initialized using the input vectors.
+// A new Vertex object is created, initialized with the corresponding data and key.
+// The adjacency list for the vertex is set to the corresponding element of the edges 
+// vector. The vertex is added to the graph's vertices map, with its key as the key 
+// in the map and the Vertex object as the value.
+// Params: vector<K> keys: vectors store k keys and vector<D> store d datas, and 
+// vector<vector<k>> edges: store the vectors of edges vector
+//===================================================================================
 template <class D, class K>
         Graph<D,K>::Graph(vector<K> keys, vector<D> data, vector<vector<K>> edges){
     // Add vertices to the graph
@@ -26,9 +52,15 @@ template <class D, class K>
         v->adj_list = new vector<K>(edges[i]);
         vertices.insert(make_pair(keys[i], v));
     }
-
 }
 
+//===================================================================================
+//  get vector<D,K> we store in the unordered_map vertices
+// Pre-condition: The Graph object has been initialized and contains vertices, amd a
+// valid key k of type K is passed as input to the function.
+// Post-condition: 
+// Params: K keys: 
+//===================================================================================
 template <class D, class K>
 Vertex<D,K>*    Graph<D,K>::get(K k) {
     if (vertices.count(k) <= 0)
@@ -37,6 +69,7 @@ Vertex<D,K>*    Graph<D,K>::get(K k) {
     }
     return vertices.at(k); //&（ G.at(k))
 }
+
 
 template <class D, class K>
 bool        Graph<D,K>::reachable( const K u, const K v ) const{
@@ -157,26 +190,34 @@ void Graph<D,K>::print_path(K s, K v) {
 template <class D, class K>
 string Graph<D,K>::edge_class(K u, K v)
 {
+    string result = "no edge";
+    if(vertices.empty())
+    {
+        return result;
+    } 
+    
     dfs();
     Vertex<D,K>* u_vertex = vertices.at(u);
     Vertex<D,K>* v_vertex = vertices.at(v);
-    cout << "u: " << u_vertex->key << "/" << u_vertex->discovery_time << "/" << u_vertex->end_time << "/" << u_vertex->parent->key<< endl;
-    cout << "v: " << v_vertex->key << "/" << v_vertex->discovery_time << "/" << v_vertex->end_time << "/" << u_vertex->parent->key<< endl;   
-    if ((v_vertex->discovery_time > u_vertex->discovery_time) && (v_vertex->end_time < u_vertex->end_time)) {
-        return "tree edge";
-    } 
-    else if ((u_vertex->discovery_time < v_vertex->discovery_time)&& (u_vertex->end_time < v_vertex->end_time)) {
-        return "back edge";
+    if((u_vertex != nullptr ) && (v_vertex != nullptr)){
+       
+        if (v_vertex->parent == u_vertex) {
+            result =  "tree edge";
         } 
-    else if ((u_vertex->discovery_time > v_vertex->discovery_time)&& (u_vertex->end_time > v_vertex->end_time)) {
-        return "forward edge";
-    } 
-    else if (v_vertex->discovery_time - u_vertex->discovery_time == 1){
-        return "cross edge";
-    } 
-    else {
-        return "no edge";
+        else if ((v_vertex->discovery_time <= u_vertex->discovery_time) && (u_vertex->end_time <= v_vertex->end_time)) {
+            result = "back edge";
+            } 
+        else if ((v_vertex->discovery_time > u_vertex -> discovery_time) && (u_vertex->end_time > v_vertex->end_time)) {
+            result = "forward edge";
+        } 
+        else if ((u_vertex->discovery_time > v_vertex->discovery_time) && (u_vertex->end_time > v_vertex->end_time)){
+            result = "cross edge";
+        } 
+        else {
+            result = "no edge";
+        }
     }
+    return result;
 }
 
 template<class D, class K>
